@@ -24,6 +24,9 @@ struct my_ip_hdr{
 #define MY_IP_HDR 20
 
 void myinfo(uint8_t *mac_addr, uint8_t *ip,const char* if_name);
-void arprequest(char *dev,uint8_t *my_mac,uint8_t *my_addr);
+void arprequest(char *dev,uint8_t *my_mac,uint8_t *my_addr,uint8_t *target_mac);
 int send_packet(char *dev,u_char *packet,int length);
+bool receive_packet(pcap_t* handle,uint8_t *target_mac);
+void mac(uint8_t *mac);
+void arpreply(char *dev,uint8_t *src_ip,uint8_t *des_ip,uint8_t *my_mac,uint8_t *target_mac);
 
