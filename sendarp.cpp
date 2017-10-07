@@ -4,10 +4,13 @@
 
 #include "sendarp.h"
 
-void mac(uint8_t *mac){
+void print_mac(uint8_t *mac){
     printf("%hhx:%hhx:%hhx:%hhx:%hhx:%hhx\n",mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
 }
-
+void print_ip(uint8_t *_ip){
+    char ipbuf[INET_ADDRSTRLEN];
+    printf("%s\n",inet_ntop(AF_INET, _ip, ipbuf, sizeof(ipbuf)));
+}
 void arpreply(char *dev,uint8_t *src_ip,uint8_t *des_ip,uint8_t *my_mac, uint8_t *target_mac){
     struct libnet_arp_hdr *arp_h=(libnet_arp_hdr *)malloc(LIBNET_ARP_H);
     struct libnet_ethernet_hdr *eth_h=(libnet_ethernet_hdr *)malloc(LIBNET_ETH_H);
@@ -36,7 +39,6 @@ void arpreply(char *dev,uint8_t *src_ip,uint8_t *des_ip,uint8_t *my_mac, uint8_t
 
     for(int i=0;i<10;i++) {
         send_packet(dev, packet, LIBNET_ETH_H + LIBNET_ARP_H + MY_IP_HDR);
-        printf("%d\n",i);
     }
 }
 
@@ -77,6 +79,9 @@ void arprequest(char *dev,uint8_t *my_mac,uint8_t *my_addr,uint8_t *target_mac){
         return;
     }
     while(!receive_packet(handle,target_mac));
+    printf("target_mac ");
+    print_mac(target_mac);
+
     return;
 
 }
@@ -98,6 +103,10 @@ void myinfo(uint8_t * mac_addr, uint8_t * ip,const char* if_name)
 
         freeifaddrs(iflist);
     }
+    printf("my mac : ");
+    print_mac(mac_addr);
+    printf("my ip : ");
+    print_ip(ip);
     return;
 }
 
